@@ -19,7 +19,7 @@ jobs:
       #   run:  choosenim stable
 
       - name: Install dependencies
-        run:  nimble install
+        run:  ~/.nimble/bin/nimble install
 
       - name: Run tests
-        run:  nimble test
+        run:  ~/.nimble/bin/nimble test
