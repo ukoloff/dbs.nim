@@ -1,8 +1,7 @@
 name: GitHubPages
 
 on:
-  push:
-    branches: gha
+  - push
 
 jobs:
   publish:
