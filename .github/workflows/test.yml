@@ -1,0 +1,26 @@
+name: GitHubPages
+
+on:
+  push:
+    branches: gha
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Install choosenim
+        run:  curl https://nim-lang.org/choosenim/init.sh -sSf | sh
+
+      - name: Install Nim
+        run:  choosenim stable
+
+      - name: Install dependencies
+        run:  nimble install
+
+      - name: Run tests
+        run:  nimble test
