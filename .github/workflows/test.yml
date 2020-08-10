@@ -14,9 +14,6 @@ jobs:
       - name: Add to PATH
         run:  echo ::add-path::$HOME/.nimble/bin
 
-      - name: Show PATH
-        run:  echo $PATH
-
       - name: Check out
         uses: actions/checkout@v2
 
