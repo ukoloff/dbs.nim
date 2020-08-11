@@ -1,4 +1,4 @@
-import std/[json, sequtils, strutils, strformat]
+import std/[json, sequtils, strutils, strformat, sugar]
 
 import point, node, path, part, dbs
 
@@ -8,16 +8,16 @@ proc asJson*(n: Node): JsonNode =
   %*[n.point.x, n.point.y, n.bulge]
 
 proc asJson*(p: Path): JsonNode =
-  %*p.map(asJson)
+  %*p.map asJson
 
 proc asJson*(p: Part): JsonNode =
   %*{
     "partid": p.name,
-    "paths": map(p.paths, asJson)
+    "paths": p.paths.map asJson
   }
 
 proc asJson*(d: DBS): JsonNode =
-  %*map(d, asJson)
+  %*d.map asJson
 
 # JsonNode => DBS
 
@@ -60,26 +60,17 @@ proc toJson*(n: Node, pretty: bool): string =
 
 proc toJson*(p: Path, pretty: bool): string =
   let space = if pretty: "\n  " else: ""
-  proc fmtNode(n: Node): string =
-    &"{space}{n.toJson pretty}"
-  let z = p.map(fmtNode).join ","
+  let z = p.map(n => &"{space}{n.toJson pretty}").join ","
   &"[{z}]"
-
-proc quoteStr(s: string): string =
-  $ % s
 
 proc toJson*(p: Part, pretty: bool): string =
   let eol = if pretty: "\n  " else: ""
-  proc fmtPath(p: Path): string =
-    &"{eol}{p.toJson pretty}"
-  let z = p.paths.map(fmtPath).join ","
+  let z = p.paths.map(p => &"{eol}{p.toJson pretty}").join ","
   let sep = if pretty: " " else: ""
   let brk = if pretty: "\n" else: ""
-  &"""{{{eol}{quoteStr "partid"}:{sep}{quoteStr p.name},{
-    eol}{quoteStr "paths"}:{sep}[{z}{brk}]}}"""
+  &"""{{{eol}{$ %"partid"}:{sep}{$ %p.name},{
+    eol}{$ %"paths"}:{sep}[{z}{brk}]}}"""
 
 proc toJson*(d: DBS, pretty = true): string =
-  proc fmtPart(p: Part): string =
-    p.toJson pretty
-  let z = d.map(fmtPart).join ","
+  let z = d.map(p => p.toJson pretty).join ","
   &"[{z}]"
