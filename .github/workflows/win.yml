@@ -1,18 +1,20 @@
-name: Tests
+name: win
 
 on:
   - push
 
 jobs:
   testing:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Install choosenim
         run:  curl https://nim-lang.org/choosenim/init.sh -sSf | bash -s -- -y
+        shell: bash
 
       - name: Add to PATH
-        run:  echo ::add-path::$HOME/.nimble/bin
+        run:  echo ::add-path::$USERPROFILE/.nimble/bin
+        shell: bash
 
       - name: Check out
         uses: actions/checkout@v2
