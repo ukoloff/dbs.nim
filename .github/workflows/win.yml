@@ -13,7 +13,11 @@ jobs:
         shell: bash
 
       - name: Add to PATH
-        run:  echo ::add-path::$HOME/.nimble/bin
+        run:  echo ::add-path::$USERPROFILE/.nimble/bin
+        shell: bash
+
+      - name: Show PATH
+        run:  echo $PATH
         shell: bash
 
       - name: Check out

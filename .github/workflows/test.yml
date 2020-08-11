@@ -1,4 +1,4 @@
-name: GitHubPages
+name: Tests
 
 on:
   - push
