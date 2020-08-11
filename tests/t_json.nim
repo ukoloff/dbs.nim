@@ -31,3 +31,5 @@ suite "JSON":
     echo z.toJson false
 
     check $z.asJson == z.toJson false
+
+    echo z.toYaml

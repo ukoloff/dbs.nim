@@ -74,3 +74,26 @@ proc toJson*(p: Part, pretty: bool): string =
 proc toJson*(d: DBS, pretty = true): string =
   let z = d.map(p => p.toJson pretty).join ","
   &"[{z}]"
+
+# DBS => YAML string
+
+proc toYaml*(n: Node): string =
+  n.toJson true
+
+proc toYaml*(p: Path): string =
+  &"""
+  - # {p.len} nodes
+{p.map(n => "    - " & n.toYaml).join "\n"}
+"""
+
+proc toYaml*(p: Part): string =
+  &"""
+  partid: {$ %p.name}
+  area: # TODO
+  perimeter: # TODO
+  paths: # {p.paths.len}
+{p.paths.map(toYaml).join ""}
+"""
+
+proc toYaml*(d: DBS): string =
+  d.map(p => &"-\n{p.toYaml}").join ""
