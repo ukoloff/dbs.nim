@@ -37,4 +37,4 @@ proc nadir*(s: Span): Point =
   s[Point(y: 1 / s.bulge)]
 
 proc center*(s: Span): Point =
-  s[Point(y: 1 / s.bulge - s.bulge)]
+  s[Point(y: (1 / s.bulge - s.bulge) / 2)]

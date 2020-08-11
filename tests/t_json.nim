@@ -24,3 +24,6 @@ suite "JSON":
     """.parseJson.newDBS
 
     echo z.asJson.pretty
+    echo $z.asJson
+    echo z.toJson
+    echo z.toJson(false)
