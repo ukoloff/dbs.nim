@@ -87,8 +87,8 @@ proc toYaml*(p: Path): string =
 proc toYaml*(p: Part): string =
   &"""
   partid: {$ %p.name}
-  area: # TODO
-  perimeter: # TODO
+  area: {p.area}
+  perimeter: {p.perimeter}
   paths: # {p.paths.len}
 {p.paths.map(toYaml).join ""}
 """
