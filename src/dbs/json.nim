@@ -60,20 +60,18 @@ proc toJson*(n: Node, pretty: bool): string =
 
 proc toJson*(p: Path, pretty: bool): string =
   let space = if pretty: "\n  " else: ""
-  let z = p.map(n => &"{space}{n.toJson pretty}").join ","
-  &"[{z}]"
+  &"""[{p.map(n => space & n.toJson pretty).join ","}]"""
 
 proc toJson*(p: Part, pretty: bool): string =
   let eol = if pretty: "\n  " else: ""
-  let z = p.paths.map(p => &"{eol}{p.toJson pretty}").join ","
   let sep = if pretty: " " else: ""
   let brk = if pretty: "\n" else: ""
   &"""{{{eol}{$ %"partid"}:{sep}{$ %p.name},{
-    eol}{$ %"paths"}:{sep}[{z}{brk}]}}"""
+    eol}{$ %"paths"}:{sep}[{
+    p.paths.map(p => eol & p.toJson pretty).join ","}{brk}]}}"""
 
 proc toJson*(d: DBS, pretty = true): string =
-  let z = d.map(p => p.toJson pretty).join ","
-  &"[{z}]"
+  &"""[{d.map(p => p.toJson pretty).join ","}]"""
 
 # DBS => YAML string
 
