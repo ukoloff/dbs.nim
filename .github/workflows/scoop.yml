@@ -1,0 +1,24 @@
+name: Scoop
+
+on:
+  - push
+
+jobs:
+  x32:
+    runs-on: windows-latest
+
+    steps:
+      - name: Install scoop
+        run:  iwr -useb get.scoop.sh | iex
+
+      - name: Install NIM
+        run:  scoop install nim
+
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run:  nimble install
+
+      - name: Run tests
+        run:  nimble test
