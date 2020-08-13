@@ -15,5 +15,5 @@ jobs:
         run:  |
           iwr -useb get.scoop.sh | iex
           scoop install nim
-          # nimble install
+          nimble install
           nimble test
