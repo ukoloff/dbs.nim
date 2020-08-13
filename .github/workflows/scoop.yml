@@ -8,16 +8,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Check out
+        uses: actions/checkout@v2
+
       - name: Install scoop
         run:  |
           iwr -useb get.scoop.sh | iex
           scoop install nim
-
-      - name: Check out
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run:  nimble install
-
-      - name: Run tests
-        run:  nimble test
+          # nimble install
+          nimble test
