@@ -19,6 +19,9 @@ jobs:
         run:  echo ::add-path::$USERPROFILE/scoop/shims
         shell: bash
 
+      - name: Show PATH
+        run:  echo $PATH
+
       - name: Install Nim
         run: scoop install nim -a 32bit
 
