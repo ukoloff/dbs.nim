@@ -23,7 +23,7 @@ jobs:
         run:  echo $PATH
 
       - name: Install Nim
-        run: scoop install nim -a 32bit
+        run: scoop install nim -i -a 32bit
 
       - name: Show versions
         run:  |
@@ -31,4 +31,4 @@ jobs:
           nimble -v
 
       - name: Run test(s)
-        run: nimble test
+        run: nimble test -d:mingw
