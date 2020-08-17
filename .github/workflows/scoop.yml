@@ -22,5 +22,8 @@ jobs:
       - name: Install Nim
         run: scoop install nim -a 32bit
 
+      - name: Install dependencies
+        run:  nimble install
+
       - name: Run test(s)
         run: nimble tests
