@@ -19,3 +19,6 @@ jobs:
 
       - name: Run tests
         run:  nimble test
+
+      - name: Run tests @x86
+        run:  nimble test --cpu:i386
