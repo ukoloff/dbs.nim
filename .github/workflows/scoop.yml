@@ -31,4 +31,4 @@ jobs:
           nimble -v
 
       - name: Run test(s)
-        run: nimble test -d:mingw
+        run: nimble test --cpu:i386
