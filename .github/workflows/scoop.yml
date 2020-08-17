@@ -14,6 +14,13 @@ jobs:
       - name: Install scoop
         run:  |
           iwr -useb get.scoop.sh | iex
-          scoop install nim
-          nimble install
-          nimble test
+
+      - name: Add to PATH
+        run:  echo ::add-path::$USERPROFILE/scoop/shims
+        shell: bash
+
+      - name: Install Nim
+        run: scoop install nim -a 32bit
+
+      - name: Run test(s)
+        run: nimble tests
