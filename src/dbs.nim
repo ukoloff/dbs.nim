@@ -5,3 +5,6 @@
 import dbs/dbs
 
 export DBS
+
+when isMainModule:
+  echo "int is ", int.sizeof,  " bits."
