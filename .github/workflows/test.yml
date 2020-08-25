@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install mingw
+        run:  sudo apt install mingw-w64
+
       - name: setup Nim
         uses: jiro4989/setup-nim-action@v1
 
@@ -19,3 +22,6 @@ jobs:
 
       - name: Run tests
         run:  nimble test
+
+      - name: Run binary
+        run:  nim c -r src/dbs.nim
