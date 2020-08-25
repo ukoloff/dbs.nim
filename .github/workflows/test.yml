@@ -30,3 +30,9 @@ jobs:
         run:  |
           nim c -d:mingw --cpu:amd64 -o:dbs-64.exe src/dbs.nim
           nim c -d:mingw --cpu:i386  -o:dbs-32.exe src/dbs.nim
+
+      - name: Upload exe
+        uses: actions/upload-artifact@v2
+        with:
+          name: win
+          path: ./*.exe
