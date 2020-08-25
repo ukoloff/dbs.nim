@@ -27,7 +27,7 @@ jobs:
         run:  src/dbs
 
       - name: Build x32 app
-        run:  nim c -d:mingw --cpu:i386 src/dbs
+        run:  nim c --cpu:i386 src/dbs
 
       - name: Run x32 app
         run:  src/dbs
