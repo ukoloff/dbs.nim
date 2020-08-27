@@ -1,21 +1,67 @@
-name: Tests
+name: test
 
 on:
-  - push
+  push:
 
 jobs:
-  testing:
+  skip:
     runs-on: ubuntu-latest
-
     steps:
-      - name: setup Nim
-        uses: jiro4989/setup-nim-action@v1
+      - run: echo "Skip job"
 
-      - name: Check out
-        uses: actions/checkout@v2
+  before:
+    runs-on: ubuntu-latest
+    if: "! contains(github.event.head_commit.message, '[skip ci]')"
+    steps:
+      - run: echo "not contains '[skip ci]'"
 
-      - name: Install dependencies
-        run:  nimble install
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
+        nim_version:
+          - '1.2.0'
+          - 'stable'
+    needs: before
+    steps:
+      - uses: actions/checkout@v1
 
-      - name: Run tests
+      - name: Set cache-key
+        id: vars
+        run: |
+          if [[ ${{ matrix.nim_version }} == stable ]]; then
+            echo ::set-output name=cache-key::$(date +%Y-%m-%d)
+          else
+            echo ::set-output name=cache-key::${{ matrix.nim_version }}
+          fi
+        shell: bash
+
+      - name: Print cache-key
+        run: echo cache-key = ${{ steps.vars.outputs.cache-key }}
+
+      - name: Cache choosenim
+        id: cache-choosenim
+        uses: actions/cache@v1
+        with:
+          path: ~/.choosenim
+          key: ${{ runner.os }}-choosenim-${{ steps.vars.outputs.cache-key }}
+        if: runner.os != 'Windows'
+
+      - name: Cache nimble
+        id: cache-nimble
+        uses: actions/cache@v1
+        with:
+          path: ~/.nimble
+          key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
+        if: runner.os != 'Windows'
+
+      - uses: jiro4989/setup-nim-action@v1
+        with:
+          nim-version: ${{ matrix.nim_version }}
+
+      - name: Run test(s)
         run:  nimble test
