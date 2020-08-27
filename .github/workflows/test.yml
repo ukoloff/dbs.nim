@@ -63,5 +63,10 @@ jobs:
         with:
           nim-version: ${{ matrix.nim_version }}
 
+      - name: Dump versions
+        run: |
+          nim -v
+          nimble -v
+
       - name: Run test(s)
         run:  nimble test
