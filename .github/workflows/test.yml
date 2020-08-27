@@ -109,10 +109,10 @@ jobs:
           nimble -v
 
       - name: Build x64
-        run:  nim c -d:mingw --cpu:amd64 -o:dbs-64.exe src/dbs.nim
+        run:  nim c -d:mingw -d:release --cpu:amd64 -o:dbs-64.exe src/dbs.nim
 
       - name: Build x86
-        run:  nim c -d:mingw --cpu:i386  -o:dbs-32.exe src/dbs.nim
+        run:  nim c -d:mingw -d:release --cpu:i386  -o:dbs-32.exe src/dbs.nim
 
       - name: Upload exe
         uses: actions/upload-artifact@v2
