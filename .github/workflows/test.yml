@@ -28,7 +28,7 @@ jobs:
           - 'stable'
     needs: before
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
 
       - name: Set cache-key
         id: vars
