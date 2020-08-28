@@ -11,7 +11,7 @@ proc abs2*(pt: Point): float =
   pt.x * pt.x + pt.y * pt.y
 
 proc abs*(pt: Point): float =
-  sqrt(pt.abs)
+  sqrt(pt.abs2)
 
 # Conjugate
 proc `~`*(pt: Point): Point =

@@ -1,44 +1,27 @@
-name: test
+name: exe
 
 on:
   push:
 
 jobs:
-  skip:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Skip job"
-
   before:
     runs-on: ubuntu-latest
     if: "! contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - run: echo "not contains '[skip ci]'"
 
-  test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - macOS-latest
-          - windows-latest
-        nim_version:
-          - '1.2.0'
-          - 'stable'
+  build:
+    runs-on: ubuntu-latest
     needs: before
     steps:
+      - name: Install MinGW
+        run:  sudo apt install mingw-w64
+
       - uses: actions/checkout@v2
 
       - name: Set cache-key
         id: vars
-        run: |
-          if [[ ${{ matrix.nim_version }} == stable ]]; then
-            echo ::set-output name=cache-key::$(date +%Y-%m-%d)
-          else
-            echo ::set-output name=cache-key::${{ matrix.nim_version }}
-          fi
-        shell: bash
+        run: echo ::set-output name=cache-key::$(date +%Y-%m-%d)
 
       - name: Print cache-key
         run: echo cache-key = ${{ steps.vars.outputs.cache-key }}
@@ -49,7 +32,6 @@ jobs:
         with:
           path: ~/.choosenim
           key: ${{ runner.os }}-choosenim-${{ steps.vars.outputs.cache-key }}
-        if: runner.os != 'Windows'
 
       - name: Cache nimble
         id: cache-nimble
@@ -57,16 +39,22 @@ jobs:
         with:
           path: ~/.nimble
           key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
-        if: runner.os != 'Windows'
 
       - uses: jiro4989/setup-nim-action@v1
-        with:
-          nim-version: ${{ matrix.nim_version }}
 
       - name: Dump versions
         run: |
           nim -v
           nimble -v
 
-      - name: Run test(s)
-        run:  nimble test
+      - name: Build x64
+        run:  nim c -d:mingw -d:release --cpu:amd64 -o:dbs-64.exe src/dbs.nim
+
+      - name: Build x86
+        run:  nim c -d:mingw -d:release --cpu:i386  -o:dbs-32.exe src/dbs.nim
+
+      - name: Upload exe
+        uses: actions/upload-artifact@v2
+        with:
+          name: win
+          path: ./*.exe
