@@ -17,9 +17,6 @@ jobs:
       - name: Install MinGW
         run:  sudo apt install mingw-w64
 
-      - name: Install UPX
-        run:  sudo apt install upx-ucl
-
       - uses: actions/checkout@v2
 
       - name: Set cache-key
