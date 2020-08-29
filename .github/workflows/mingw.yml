@@ -53,6 +53,9 @@ jobs:
       - name: Build x86
         run:  nim c -d:mingw -d:release --cpu:i386  -o:dbs-32.exe src/dbs.nim
 
+      - name: Run UPX
+        run:  upx *.exe
+
       - name: Upload exe
         uses: actions/upload-artifact@v2
         with:
