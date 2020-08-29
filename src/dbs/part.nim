@@ -5,10 +5,10 @@ type
     name*: string
     paths*: seq[Path]
 
-proc area*(p: Part): float =
+func area*(p: Part): float =
   for z in p.paths:
     result += z.area
 
-proc perimeter*(p: Part): float =
+func perimeter*(p: Part): float =
   for z in p.paths:
     result += z.perimeter
