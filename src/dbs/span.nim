@@ -10,7 +10,7 @@ type
   SpanPtr* = ptr Span
 
 static:
-  assert Span.sizeof == 2 * Point.sizeof + float.sizeof
+  doAssert Span.sizeof == 2 * Point.sizeof + float.sizeof
 
 proc sqr(x: float): float =
   x * x

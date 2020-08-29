@@ -5,7 +5,7 @@ type
     x*, y*: float
 
 static:
-  assert Point.sizeof == 2 * float.sizeof
+  doAssert Point.sizeof == 2 * float.sizeof
 
 proc abs2*(pt: Point): float =
   pt.x * pt.x + pt.y * pt.y

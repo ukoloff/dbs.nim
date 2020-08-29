@@ -6,4 +6,4 @@ type
     bulge*: float
 
 static:
-  assert Node.sizeof == Point.sizeof + float.sizeof
+  doAssert Node.sizeof == Point.sizeof + float.sizeof
