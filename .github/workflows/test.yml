@@ -69,4 +69,4 @@ jobs:
           nimble -v
 
       - name: Run test(s)
-        run:  nimble test
+        run:  testament c /
