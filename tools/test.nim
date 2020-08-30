@@ -1,6 +1,7 @@
 import macros
 
-macro oops(arg: untyped) =
-  newLit(0)
+macro hi() =
+  quote:
+    echo "Hello, world!"
 
-echo "Hello, world!"
+hi()
