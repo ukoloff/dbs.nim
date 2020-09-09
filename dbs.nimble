@@ -9,6 +9,3 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-
-task test, "Run test(s)":
-  exec "nim c -r tools/test"
