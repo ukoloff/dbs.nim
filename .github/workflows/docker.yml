@@ -40,4 +40,5 @@ jobs:
         run:  nim c -d:mingw --cpu:amd64 src/dbs
 
       - name: Build x32@win
+        if:   false
         run:  nim c -d:mingw --cpu:i386 src/dbs
