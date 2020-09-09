@@ -54,3 +54,11 @@ type
   ## Point of contour
   R1* = object
     x, y, bulge:  float32
+
+func isEOF*(r: R0): bool =
+  r.size < 0
+
+proc swap*(r: var R26) =
+  for i, _ in r.name:
+    if (i and 1) != 0:
+      swap(r.name[i-1], r.name[i])
