@@ -4,16 +4,18 @@
 #
 
 type
+  Padding = distinct int16 ## = 0
+
   ## Common record prologue
   R0* = object
     size:   int16
     id2:    int16
     size2:  int16
-    x1:     int16 ## = 0
+    x1:     Padding
     typ:    int16
-    x2:     int16 ## = 0
+    x2:     Padding
     id:     int16
-    x3:     int16 ## = 0
+    x3:     Padding
 
   ## Part name
   R26* = object
@@ -27,7 +29,7 @@ type
   ## Bind contour to Part
   R8* = object
     id: int16
-    x1: int16   ## = 0
+    x1: Padding
 
   Point = object
     x, y: float32
@@ -38,17 +40,17 @@ type
   ## Copy of Part
   R2* = object
     sybtype:  int16
-    x1:       int16 ## = 0
+    x1:       Padding
     text:     int16
-    x2:       int16 ## = 0
+    x2:       Padding
     autoseq:  int16
-    x3:       int16 ## = 0
+    x3:       Padding
     part:     int16
-    x4:       int16 ## = 0
+    x4:       Padding
     original: int16
-    x5:       int16 ## = 0
+    x5:       Padding
     rev:      int16
-    x6:       int16 ## = 0
+    x6:       Padding
     o2:       O2
 
   ## Point of contour
