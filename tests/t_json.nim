@@ -1,15 +1,13 @@
-import os, unittest, json, strutils
+import json as JSON, unittest
 
-import dbs/json as jjj
-
-const
-  src = currentSourcePath.parentDir.joinPath("../geodet/rounded3x4.json").staticRead.strip
+import dbs/[json]
+import geodet
 
 suite "JSON":
 
   test "forth & back":
 
-    let z = src.parseJson.newDBS
+    let z = geodet.asDBS
 
     echo z.asJson.pretty
     echo $z.asJson
