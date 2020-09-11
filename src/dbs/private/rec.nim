@@ -94,3 +94,8 @@ proc init*(r1: var R1, node: Node) =
   r1.x = node.point.x
   r1.y = node.point.y
   r1.bulge = node.bulge
+
+proc toNode*(r1: R1, n: var Node) =
+  n.point.x = r1.x
+  n.point.y = r1.y
+  n.bulge = r1.bulge

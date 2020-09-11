@@ -4,6 +4,7 @@ import dbs/json
 
 const
   asStr* = currentSourcePath.parentDir.joinPath("../geodet/rounded3x4.json").staticRead.strip
+  asBin* = currentSourcePath.parentDir.joinPath("../geodet/rounded3x4.dbs").staticRead
 
 let
   asJson* = asStr.parseJson
