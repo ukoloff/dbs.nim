@@ -65,8 +65,10 @@ func isEOF*(r: R0): bool =
 func bytes*(r: R0): int =
   (r.size.int + 1) * 4
 
-proc next*(r: var R0, typ: int16, payload = 0) =
-  r.id += 1
+func payload*(r: R0): int =
+  (r.size.int + 1) * 4 - r.sizeof
+
+proc init*(r: var R0, typ: int16, payload = 0) =
   r.typ = typ
   r.size = ((payload + r.sizeof + 3) / 4 - 1).int16
 
