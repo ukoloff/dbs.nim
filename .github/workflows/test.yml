@@ -16,13 +16,13 @@ jobs:
       - run: echo "not contains '[skip ci]'"
 
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
         os:
-          - ubuntu-latest
-          - macOS-latest
-          - windows-latest
+          - ubuntu
+          - macOS
+          - windows
         nim_version:
           - '1.2.0'
           - 'stable'
