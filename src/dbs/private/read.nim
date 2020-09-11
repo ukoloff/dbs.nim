@@ -1,4 +1,4 @@
-import streams, tables
+import streams, tables, sequtils
 import rec
 import ".." / [dbs, part, path]
 
@@ -26,19 +26,26 @@ proc readPath(r: var Reader) =
     payload = r.rec.payload
   if r.rec.typ == 2:
     doAssert payload == R2.sizeof, "Path copy contains geometry"
-  doAssert payload >= R2.sizeof and 0 == (payload - R2.sizeof) mod R1.sizeof,
+  doAssert payload >= R2.sizeof and
+    0 == (payload - R2.sizeof) mod R1.sizeof,
     "Invalid Path count"
   var
     r2: R2
   r.src.read r2
-  if r.rec.typ == 1:
-    var
-      path: Path
-    path.newSeq (payload - R2.sizeof) div R1.sizeof
-    for i in 0..<path.len:
-      var r1: R1
-      r.src.read r1
-      r1.toNode path[i]
+  r.r2s[r.rec.id] = r2
+
+  if r.rec.typ != 1:
+    return
+
+  # Original contour - should reference itself
+  r.r2s[r.rec.id].original = r.rec.id
+  var path: Path
+  path.newSeq (payload - R2.sizeof) div R1.sizeof
+  for i in 0..<path.len:
+    var r1: R1
+    r.src.read r1
+    r1.toNode path[i]
+  r.r1s[r.rec.id] = path
 
 proc read8(r: var Reader) =
   var paths: seq[int16]
@@ -75,5 +82,12 @@ proc parse(r: var Reader) =
 
 proc read*(r: var Reader): DBS =
   r.parse
+
+  proc buildPath(id: int16): Path =
+    discard
+
   for k, v in r.particles:
-    result.add Part(name: v.name)
+    result.add Part(
+      name: v.name,
+      paths: v.paths.map buildPath
+    )
