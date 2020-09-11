@@ -11,19 +11,21 @@ type
   Reader* = object
     src: Stream
     rec: R0
-    parts: seq[int16]
-    particles: Table[int16, Particle]
-    r1s: seq[Path]
-    r2s: seq[R2]
+    particles: OrderedTable[int16, Particle]
+    r1s: Table[int16, Path]
+    r2s: Table[int16, R2]
 
 proc init*(r: var Reader, src: Stream) =
   r.src = src
+
+proc `[]`(r: var Reader, index: int16): var Particle =
+  return r.particles.mgetOrPut(index, Particle())
 
 proc readPath(r: var Reader) =
   let
     payload = r.rec.payload
   if r.rec.typ == 2:
-    doAssert payload == 0, "Path copy contains geometry"
+    doAssert payload == R2.sizeof, "Path copy contains geometry"
   doAssert payload >= R2.sizeof and 0 == (payload - R2.sizeof) mod R1.sizeof,
     "Invalid Path count"
   var
@@ -39,18 +41,22 @@ proc readPath(r: var Reader) =
       r1.toNode path[i]
 
 proc read8(r: var Reader) =
-  let count = r.rec.payload div R8.sizeof
-  for i in 0..<count:
+  var paths: seq[int16]
+  paths.newSeq r.rec.payload div R8.sizeof
+  for i in 0..<paths.len:
     var r8: R8
     r.src.read r8
+    paths[i] = r8.id
+  r[r.rec.id].paths = paths
 
 proc read26(r: var Reader) =
   var r26: R26
   doAssert r.rec.payload == R26.sizeof, "Invalid Record #26"
   r.src.read r26
   r26.swap
+  r[r.rec.id].name = $r26
 
-proc read*(r: var Reader): DBS =
+proc parse(r: var Reader) =
   while true:
     r.src.peek(r.rec.size)
     if r.rec.isEOF:
@@ -66,3 +72,8 @@ proc read*(r: var Reader): DBS =
       r.read26
     else:
       r.src.setPosition r.src.getPosition + r.rec.payload
+
+proc read*(r: var Reader): DBS =
+  r.parse
+  for k, v in r.particles:
+    result.add Part(name: v.name)
