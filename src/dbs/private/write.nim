@@ -36,13 +36,16 @@ proc writeRecord*(writer: var Writer) =
   writer.dst.write(writer.rec)
 
 proc write*(writer: var Writer, path: Path, ctx: PathContext) =
+  writer.next 1, R2.sizeof + path.len * R1.sizeof
+  writer.writeRecord
   var r2: R2
-  writer.next 1, path.len * R1.sizeof
-  r2.init()
-  writer.writeRecord()
+  r2.init
+  r2.part = ctx.part.int16
+  r2.original = writer.rec.id
+  writer.dst.write r2
   for node in path:
     var r1: R1
-    r1.init(node)
+    r1.init node
     writer.dst.write r1
 
 proc write*(writer: var Writer, part: Part) =
@@ -69,6 +72,14 @@ proc write*(writer: var Writer, part: Part) =
     let r27 = R27(area: part.area / 1e4, perimeter: part.perimeter / 1e2)
     writer.writeRecord
     writer.dst.write r27
+
+  block rec8:
+    writer.next 8, R8.sizeof * part.paths.len
+    var r8 = R8(id: (writer.rec.id - part.paths.len).int16)
+    writer.writeRecord
+    for i in 0..<part.paths.len:
+      writer.dst.write r8
+      r8.id.inc
 
 proc write*(writer: var Writer, dbs: DBS) =
   for part in dbs:
