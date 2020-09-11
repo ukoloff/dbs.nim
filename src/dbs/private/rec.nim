@@ -25,8 +25,8 @@ type
 
   ## Area + Perimeter
   R27* = object
-    area:       float32
-    perimeter:  float32
+    area*:       float32
+    perimeter*:  float32
 
   ## Bind contour to Part
   R8* = object

@@ -26,6 +26,9 @@ proc writeEOF*(writer: var Writer) =
 proc next*(writer: var Writer, typ: int16, payload = 0) =
   writer.rec.init typ, payload
 
+proc inc(writer: var Writer) =
+  writer.rec.id.inc
+
 ## Write DBS record
 proc writeRecord*(writer: var Writer) =
   writer.rec.id2 = writer.rec.id
@@ -47,10 +50,17 @@ proc write*(writer: var Writer, part: Part) =
     ctx: PathContext
   ctx.part = writer.rec.id + part.paths.len + 1
   for i, path in part.paths:
+    writer.inc
     ctx.index = i
     writer.write path, ctx
+  writer.inc
+  doAssert ctx.part == writer.rec.id, "Failed enumerating part's paths"
 
-  # doAssert ctx.part == writer.rec.id, "Failed enumerating part's paths"
+  block rec27:
+    writer.next 27, R27.sizeof
+    let r27 = R27(area: part.area / 1e4, perimeter: part.perimeter / 1e2)
+    writer.writeRecord
+    writer.dst.write r27
 
 proc write*(writer: var Writer, dbs: DBS) =
   for part in dbs:
