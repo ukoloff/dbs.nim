@@ -56,6 +56,14 @@ proc write*(writer: var Writer, part: Part) =
   writer.inc
   doAssert ctx.part == writer.rec.id, "Failed enumerating part's paths"
 
+  block rec26:
+    writer.next 27, R26.sizeof
+    var r26: R26
+    r26.init part.name
+    r26.swap
+    writer.writeRecord
+    writer.dst.write r26
+
   block rec27:
     writer.next 27, R27.sizeof
     let r27 = R27(area: part.area / 1e4, perimeter: part.perimeter / 1e2)
