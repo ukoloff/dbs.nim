@@ -40,7 +40,7 @@ proc write*(writer: var Writer, path: Path, ctx: PathContext) =
   writer.writeRecord
   var r2: R2
   r2.init
-  r2.part = ctx.part.int16
+  r2.part = (if ctx.index > 0: ctx.part else: -ctx.part).int16
   r2.original = writer.rec.id
   writer.dst.write r2
   for node in path:
@@ -59,7 +59,7 @@ proc write*(writer: var Writer, part: Part) =
   writer.inc
   doAssert ctx.part == writer.rec.id, "Failed enumerating part's paths"
 
-  block rec26:
+  block partName:
     writer.next 27, R26.sizeof
     var r26: R26
     r26.init part.name
@@ -67,13 +67,13 @@ proc write*(writer: var Writer, part: Part) =
     writer.writeRecord
     writer.dst.write r26
 
-  block rec27:
+  block partMeasure:
     writer.next 27, R27.sizeof
     let r27 = R27(area: part.area / 1e4, perimeter: part.perimeter / 1e2)
     writer.writeRecord
     writer.dst.write r27
 
-  block rec8:
+  block partPaths:
     writer.next 8, R8.sizeof * part.paths.len
     var r8 = R8(id: (writer.rec.id - part.paths.len).int16)
     writer.writeRecord
