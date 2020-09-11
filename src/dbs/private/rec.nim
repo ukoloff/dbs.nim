@@ -81,7 +81,7 @@ proc `$`*(r: var R26): string =
 
 proc init*(r: var R26, s: string) =
   for i in 0..<r.name.len:
-    r.name[i] = if i < s.len: s[0] else: ' '
+    r.name[i] = if i < s.len: s[i] else: ' '
 
 proc init(o2: var O2) =
   o2.x.x = 1
