@@ -54,15 +54,15 @@ func newDBS*(j: JsonNode): DBS =
 
 # DBS => JSON string
 
-func toJson*(n: Node, pretty: bool): string =
+func toJson*(n: Node, pretty = true): string =
   let space = if pretty: " " else: ""
   &"[{n.point.x},{space}{n.point.y},{space}{n.bulge}]"
 
-func toJson*(p: Path, pretty: bool): string =
+func toJson*(p: Path, pretty = true): string =
   let space = if pretty: "\n  " else: ""
   &"""[{p.map(n => space & n.toJson pretty).join ","}]"""
 
-func toJson*(p: Part, pretty: bool): string =
+func toJson*(p: Part, pretty = true): string =
   let eol = if pretty: "\n  " else: ""
   let sep = if pretty: " " else: ""
   let brk = if pretty: "\n" else: ""
