@@ -83,11 +83,8 @@ proc parse(r: var Reader) =
 proc read*(r: var Reader): DBS =
   r.parse
 
-  proc buildPath(id: int16): Path =
-    discard
-
   for p in r.particles.values:
     result.add Part(
       name: p.name,
-      paths: p.paths.map buildPath
+      paths: p.paths.mapIt r.r1s[r.r2s[it].original]
     )
