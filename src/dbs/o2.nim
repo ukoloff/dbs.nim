@@ -11,7 +11,7 @@ proc init*(o2: var O2) =
   o2.y.y = 1
 
 proc CCW*(o2: var O2, degrees: float) =
-  let angle = degrees * PI / 180
+  let angle = degrees.degToRad
   o2.x.x = cos(angle)
   o2.x.y = sin(angle)
   o2.y.x = - o2.x.y
