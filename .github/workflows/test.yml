@@ -109,19 +109,19 @@ jobs:
           nimble -v
 
       - name: Build x64
-        run:  nim c -d:mingw -d:release --cpu:amd64 -o:dbs-64.exe src/dbs.nim
+        run:  nim c -d:mingw -d:release --cpu:amd64 --outDir:x64 src/dbs.nim
 
       - name: Build x86
-        run:  nim c -d:mingw -d:release --cpu:i386  -o:dbs-32.exe src/dbs.nim
+        run:  nim c -d:mingw -d:release --cpu:i386  --outDir:x86 src/dbs.nim
 
       - name: Run UPX
-        run:  upx *.exe
+        run:  upx **/*.exe
 
       - name: Upload exe
         uses: actions/upload-artifact@v2
         with:
           name: win
-          path: ./*.exe
+          path: ./**/*.exe
 
   docker:
     needs: before
