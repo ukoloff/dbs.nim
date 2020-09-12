@@ -80,11 +80,17 @@ proc parse(r: var Reader) =
     else:
       r.src.setPosition r.src.getPosition + r.rec.payload
 
+func getPath(r: var Reader, id: int16): Path =
+  let r2 = r.r2s[id]
+  result = r2.o2.toO2() * r.r1s[r2.original]
+  if r2.rev != 0:
+    result = result.reverted
+
 proc read*(r: var Reader): DBS =
   r.parse
 
   for p in r.particles.values:
     result.add Part(
       name: p.name,
-      paths: p.paths.mapIt r.r1s[r.r2s[it].original]
+      paths: p.paths.mapIt r.getPath it
     )

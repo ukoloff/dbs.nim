@@ -3,7 +3,7 @@
 # https://github.com/ukoloff/dbs.js/wiki/DBS
 #
 import strutils
-import ".." / [node]
+import ".." / [node, point, o2]
 
 type
   Padding = distinct int16 ## = 0
@@ -83,9 +83,18 @@ proc init*(r: var R26, s: string) =
   for i in 0..<r.name.len:
     r.name[i] = if i < s.len: s[i] else: ' '
 
+proc toPoint(pt: Point): point.Point =
+  result.x = pt.x
+  result.y = pt.y
+
 proc init(o2: var O2) =
   o2.x.x = 1
   o2.y.y = 1
+
+func toO2*(oh2: O2): o2.O2 =
+  result.x = oh2.x.toPoint
+  result.y = oh2.y.toPoint
+  result.delta = oh2.delta.toPoint
 
 proc init*(r2: var R2) =
   r2.o2.init()
