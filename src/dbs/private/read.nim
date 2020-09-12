@@ -41,19 +41,19 @@ proc readPath(r: var Reader) =
   r.r2s[r.rec.id].original = r.rec.id
   var path: Path
   path.newSeq (payload - R2.sizeof) div R1.sizeof
-  for i in 0..<path.len:
+  for node in path.mitems:
     var r1: R1
     r.src.read r1
-    r1.toNode path[i]
+    r1.toNode node
   r.r1s[r.rec.id] = path
 
 proc read8(r: var Reader) =
   var paths: seq[int16]
   paths.newSeq r.rec.payload div R8.sizeof
-  for i in 0..<paths.len:
+  for path in paths.mitems:
     var r8: R8
     r.src.read r8
-    paths[i] = r8.id
+    path = r8.id
   r[r.rec.id].paths = paths
 
 proc read26(r: var Reader) =
@@ -86,8 +86,8 @@ proc read*(r: var Reader): DBS =
   proc buildPath(id: int16): Path =
     discard
 
-  for k, v in r.particles:
+  for p in r.particles.values:
     result.add Part(
-      name: v.name,
-      paths: v.paths.map buildPath
+      name: p.name,
+      paths: p.paths.map buildPath
     )

@@ -73,8 +73,8 @@ proc init*(r: var R0, typ: int16, payload = 0) =
   r.size = ((payload + r.sizeof + 3) / 4 - 1).int16
 
 proc swap*(r: var R26) =
-  for i in countup(1 + r.name.low, 1 + r.name.high, 2):
-    swap(r.name[i-1], r.name[i])
+  for i in countup(1 + r.name.low, r.name.high, 2):
+    swap r.name[i-1], r.name[i]
 
 proc `$`*(r: var R26): string =
   r.name.join().strip()
