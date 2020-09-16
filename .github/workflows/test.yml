@@ -23,7 +23,7 @@ jobs:
       matrix:
         os:
           - ubuntu
-          - macOS
+          # - macOS
           - windows
         nim_version:
           - 1.2.0
