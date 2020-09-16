@@ -1,5 +1,5 @@
 import sequtils
-import part, o2
+import part, o2, rect
 
 type
   DBS* = seq[Part]
@@ -17,3 +17,8 @@ func copy*(d: DBS): DBS =
 
 func `*`*(o2: O2, d: DBS): DBS =
   d.mapIt o2 * it
+
+func bounds*(d: DBS): Rect =
+  result.init
+  for part in d:
+    result += part.bounds

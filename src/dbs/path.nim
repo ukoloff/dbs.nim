@@ -1,5 +1,5 @@
 import sequtils
-import node, span, o2
+import node, span, o2, rect
 
 type
   Path* = seq[Node]
@@ -38,3 +38,8 @@ proc reverted*(p: Path): Path =
 proc revert*(p: var Path) =
   for i, n in p.reverted:
     p[i] = n
+
+func bounds*(p: Path): Rect =
+  result.init
+  for s in p.spans:
+    result += s[].bounds

@@ -1,5 +1,5 @@
 import sequtils
-import path, o2
+import path, o2, rect
 
 type
   Part* = object
@@ -19,3 +19,8 @@ func copy*(p: Part): Part =
 
 func `*`*(o2: O2, p: Part): Part =
   Part(name: p.name, paths: p.paths.mapIt o2 * it)
+
+func bounds*(p: Part): Rect =
+  result.init
+  for path in p.paths:
+    result += path.bounds
