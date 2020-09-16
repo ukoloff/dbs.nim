@@ -23,6 +23,9 @@ func `==`*(a, b: Point): bool =
 func `+`*(a, b: Point): Point =
   Point(x: a.x + b.x, y: a.y + b.y)
 
+func `-`*(p: Point): Point =
+  Point(x: -p.x, y: -p.y)
+
 func `-`*(a, b: Point): Point =
   Point(x: a.x - b.x, y: a.y - b.y)
 
@@ -34,6 +37,9 @@ func `*`*(by: float, pt: Point): Point =
 
 func `*`*(a, b: Point): Point =
   Point(x: a.x * b.x - a.y * b.y, y: a.x * b.y + a.y * b.x)
+
+func `*=`*[T](p: var Point, by: T) =
+  p = p * by
 
 func `/`*(pt: Point, by: float): Point =
   Point(x: pt.x / by, y: pt.y / by)

@@ -1,6 +1,6 @@
 import math
 
-import point
+import point, rect
 
 type
   Span* = object
@@ -56,3 +56,42 @@ func perimeter*(s: Span): float =
   result = s.vector.abs
   if s.isArc:
     result *= arctan(s.bulge) / s.bulge * (1 + sqr(s.bulge))
+
+func signum*(f: float): int8 =
+  int8 f.cmp 0
+
+func signum*(p: Point): array[2, int8] =
+  [p.x.signum, p.y.signum]
+
+func bounds*(s: Span): Rect =
+  result = s.a.bounds + s.z.bounds
+  if s.isArc:
+    var
+      straight = s.vector
+      curve = Point(x: 1, y: -s.bulge)
+      outs: int8
+    curve *= curve
+    for i in 0..1:
+      let
+        s2 = straight.signum
+        t2 = (straight * curve).signum
+      for j in 0..<t2.len:
+        if t2[j] != 0 and t2[j] != s2[j]:
+          outs += 1'i8 shl (j + 1 + t2[j])
+      if i == 0:
+        # Go to other end of Span
+        straight = -straight
+        curve = ~curve
+    if outs == 0:
+      return
+    let
+      radius = s.radius
+      center = s.center
+    if (outs and 1) != 0:
+      result.a.x = center.x - radius
+    if (outs and 2) != 0:
+      result.a.y = center.y - radius
+    if (outs and 4) != 0:
+      result.z.x = center.x + radius
+    if (outs and 8) != 0:
+      result.z.y = center.y + radius
