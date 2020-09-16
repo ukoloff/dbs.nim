@@ -1,4 +1,5 @@
-import path
+import sequtils
+import path, o2
 
 type
   Part* = object
@@ -12,3 +13,9 @@ func area*(p: Part): float =
 func perimeter*(p: Part): float =
   for z in p.paths:
     result += z.perimeter
+
+func copy*(p: Part): Part =
+  Part(name: p.name, paths: p.paths.mapIt it.copy)
+
+func `*`*(o2: O2, p: Part): Part =
+  Part(name: p.name, paths: p.paths.mapIt o2 * it)

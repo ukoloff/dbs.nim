@@ -22,20 +22,20 @@ func asJson*(d: DBS): JsonNode =
 # JsonNode => DBS
 
 func newNode*(j: JsonNode): Node =
-  assert(j.kind == JArray and j.len > 1, "Invalid JSON for DBS node")
+  doAssert(j.kind == JArray and j.len > 1, "Invalid JSON for DBS node")
   Node(
     point: Point(x: j[0].getFloat, y:j[1].getFloat),
     bulge: if j.len > 2: j[2].getFloat else: 0
   )
 
 func newPath*(j: JsonNode): Path =
-  assert(j.kind == JArray, "Invalid JSON for DBS contour")
+  doAssert(j.kind == JArray, "Invalid JSON for DBS contour")
   result = newSeqOfCap[Node](j.len)
   for n in j.items:
     result.add(newNode(n))
 
 func newPart*(j: JsonNode): Part =
-  assert(j.kind == JObject and j.contains("partid") and j.contains("paths"),
+  doAssert(j.kind == JObject and j.contains("partid") and j.contains("paths"),
     "Invalid JSON for DBS part")
   let src = j{"paths"}
   var paths = newSeqOfCap[Path](src.len)
@@ -47,22 +47,22 @@ func newPart*(j: JsonNode): Part =
   )
 
 func newDBS*(j: JsonNode): DBS =
-  assert(j.kind == JArray, "Invalid JSON for DBS file")
+  doAssert(j.kind == JArray, "Invalid JSON for DBS file")
   result = newSeqOfCap[Part](j.len)
   for n in j.items:
     result.add(newPart(n))
 
 # DBS => JSON string
 
-func toJson*(n: Node, pretty: bool): string =
+func toJson*(n: Node, pretty = true): string =
   let space = if pretty: " " else: ""
   &"[{n.point.x},{space}{n.point.y},{space}{n.bulge}]"
 
-func toJson*(p: Path, pretty: bool): string =
+func toJson*(p: Path, pretty = true): string =
   let space = if pretty: "\n  " else: ""
   &"""[{p.map(n => space & n.toJson pretty).join ","}]"""
 
-func toJson*(p: Part, pretty: bool): string =
+func toJson*(p: Part, pretty = true): string =
   let eol = if pretty: "\n  " else: ""
   let sep = if pretty: " " else: ""
   let brk = if pretty: "\n" else: ""

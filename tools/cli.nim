@@ -1,2 +1,2 @@
-echo "int is ", int.sizeof,  " bits."
-echo "ptr is ", (ptr int).sizeof,  " bits."
+echo "int is ", int.sizeof,  " bytes."
+echo "ptr is ", (ptr int).sizeof,  " bytes."

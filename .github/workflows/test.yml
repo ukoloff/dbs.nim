@@ -16,17 +16,18 @@ jobs:
       - run: echo "not contains '[skip ci]'"
 
   test:
-    runs-on: ${{ matrix.os }}
+    needs: before
+    runs-on: ${{ matrix.os }}-latest
+    name: Test Nim ${{ matrix.nim_version }} @${{ matrix.os }}
     strategy:
       matrix:
         os:
-          - ubuntu-latest
-          - macOS-latest
-          - windows-latest
+          - ubuntu
+          # - macOS
+          - windows
         nim_version:
-          - '1.2.0'
-          - 'stable'
-    needs: before
+          - 1.2.0
+          - stable
     steps:
       - uses: actions/checkout@v2
 
@@ -70,3 +71,88 @@ jobs:
 
       - name: Run test(s)
         run:  nimble test
+
+  mingw:
+    needs: before
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install MinGW
+        run:  sudo apt install mingw-w64
+
+      - uses: actions/checkout@v2
+
+      - name: Set cache-key
+        id: vars
+        run: echo ::set-output name=cache-key::$(date +%Y-%m-%d)
+
+      - name: Print cache-key
+        run: echo cache-key = ${{ steps.vars.outputs.cache-key }}
+
+      - name: Cache choosenim
+        id: cache-choosenim
+        uses: actions/cache@v1
+        with:
+          path: ~/.choosenim
+          key: ${{ runner.os }}-choosenim-${{ steps.vars.outputs.cache-key }}
+
+      - name: Cache nimble
+        id: cache-nimble
+        uses: actions/cache@v1
+        with:
+          path: ~/.nimble
+          key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
+
+      - uses: jiro4989/setup-nim-action@v1
+
+      - name: Dump versions
+        run: |
+          nim -v
+          nimble -v
+
+      - name: Build x64
+        run:  nim c -d:mingw -d:release --cpu:amd64 --outDir:x64 src/dbs.nim
+
+      - name: Build x86
+        run:  nim c -d:mingw -d:release --cpu:i386  --outDir:x86 src/dbs.nim
+
+      - name: Run UPX
+        run:  upx **/*.exe
+
+      - name: Upload exe
+        uses: actions/upload-artifact@v2
+        with:
+          name: win
+          path: ./**/*.exe
+
+  docker:
+    needs: before
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        nim_version:
+          - 1.2.0
+          - latest
+
+    container: nimlang/nim:${{ matrix.nim_version }}-alpine
+
+    steps:
+      - name: Dump versions
+        run: |
+          nim -v
+          nimble -v
+
+      - uses: actions/checkout@v2
+
+      - name: Run test(s)
+        run:  nimble test
+
+      - name: Install MinGW
+        run:  apk add mingw-w64-gcc
+
+      - name: Build x64@win
+        run:  nim c -d:mingw --cpu:amd64 src/dbs
+
+      - name: Build x32@win
+        if:   false
+        run:  nim c -d:mingw --cpu:i386 src/dbs

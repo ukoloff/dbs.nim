@@ -43,3 +43,6 @@ func `/`*(a, b: Point): Point =
 
 func `/`*(by: float, pt: Point): Point =
   Point(x: by) / pt
+
+func copy*(p: Point): Point =
+  result = p
