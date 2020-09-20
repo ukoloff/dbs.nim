@@ -9,8 +9,8 @@ type
 
   ## Pass Part info to Path
   PathContext = object
-    part:   int
-    index:  int
+    part: int
+    index: int
 
 proc init*(writer: var Writer, dst: Stream) =
   writer.dst = dst
