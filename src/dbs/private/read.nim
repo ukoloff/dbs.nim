@@ -87,9 +87,32 @@ func getPath(r: var Reader, id: int16): Path =
   if r2.rev != 0:
     result = result.reverted
 
+func missingPaths(r: Reader): seq[int16] =
+  var
+    used: set[int16]
+  for p in r.particles.values:
+    for id in p.paths:
+      used.incl id
+  for id in r.r2s.keys:
+    if not id in used:
+      result.add id
+
+proc addMissing(r: var Reader) =
+  let ids = r.missingPaths
+  if 0 == ids.len:
+    return
+  var id: int16 = -1
+  for partid in r.particles.keys:
+    if partid <= id:
+      id = partid - 1
+  r.particles[id] = Particle(
+    name: "-",
+    paths: ids
+  )
+
 proc read*(r: var Reader): DBS =
   r.parse
-
+  r.addMissing
   for p in r.particles.values:
     result.add Part(
       name: p.name,
