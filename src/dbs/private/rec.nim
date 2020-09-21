@@ -79,9 +79,14 @@ proc swap*(r: var R26) =
 proc `$`*(r: var R26): string =
   r.name.join().strip()
 
-proc init*(r: var R26, s: string) =
+proc init*(r: var R26, s: string = "") =
   for i in 0..<r.name.len:
     r.name[i] = if i < s.len: s[i] else: ' '
+
+proc fix0*(r: var R26) =
+  for c in r.name.mitems:
+    if c == '\0':
+      c = ' '
 
 proc toPoint(pt: Point): point.Point =
   result.x = pt.x

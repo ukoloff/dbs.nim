@@ -60,6 +60,7 @@ proc read26(r: var Reader) =
   var r26: R26
   doAssert r.rec.payload == R26.sizeof, "Invalid Record #26"
   r.src.read r26
+  r26.fix0
   r26.swap
   r[r.rec.id].name = $r26
 
